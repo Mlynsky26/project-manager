@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
+import { ProjectsProvider } from './context/ProjectsContext'
+import Footer from "./_components/Footer";
+import Header from "./_components/Header";
+import { UserProvider } from "./context/UserContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,8 +29,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+      <head>
+        <title>Projects</title>
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} min-vh-100`}>
+        <UserProvider>
+          <ProjectsProvider>
+            <div className="d-flex flex-column min-vh-100 gap-3">
+              <Header />
+              <div className="flex-fill">
+                {children}
+              </div>
+              <Footer />
+            </div>
+          </ProjectsProvider>
+        </UserProvider>
       </body>
     </html>
   );
