@@ -1,10 +1,9 @@
 'use client';
 
-import { useProjects } from '../context/ProjectsContext';
+import { useProjects } from '@/context/ProjectsContext';
 import { Container, Row } from 'react-bootstrap';
-import ProjectItem from '../_components/ProjectItem';
-import Link from 'next/link';
-import { BsPlusLg } from 'react-icons/bs';
+import ProjectItem from '@/components/project/ProjectItem';
+import AddProject from '@/components/project/AddProject';
 
 const ProjectsPage = () => {
     const { projects } = useProjects()
@@ -13,7 +12,7 @@ const ProjectsPage = () => {
         <Container>
             <div className="d-flex flex-wrap gap-2 align-items-center justify-content-between">
                 <h1>Your projects</h1>
-                <Link href="/projects/add" className='btn btn-primary'>Add new <BsPlusLg /></Link>
+                <AddProject></AddProject>
             </div>
             <Row>
                 {projects.length === 0 ? (

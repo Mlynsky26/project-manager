@@ -1,13 +1,10 @@
 import { Alert } from "react-bootstrap";
-import { Project, ProjectUpdatable, } from "../context/ProjectsContext";
 import { useState } from "react";
+import { BaseProject } from "@/models/BaseProject";
 
 type ProjectFormProps = {
-    project: {
-        name: Project['name'],
-        description: Project['description']
-    };
-    submitHandler: (project: ProjectUpdatable) => void
+    project: BaseProject
+    submitHandler: (project: BaseProject) => void
 };
 
 const ProjectForm = ({ project, submitHandler }: ProjectFormProps) => {

@@ -4,7 +4,7 @@ import React from "react";
 import { BsPencilSquare } from "react-icons/bs";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import Link from "next/link";
-import { useUser } from "../context/UserContext";
+import { useUser } from "@/context/UserContext";
 import { FaSignInAlt, FaRegUser } from "react-icons/fa";
 
 const navLinks = [

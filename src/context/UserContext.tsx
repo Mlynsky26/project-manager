@@ -10,7 +10,6 @@ export type User = {
 
 export type UserOmitId = Omit<User, 'id'>
 
-
 export type UserContextType = {
   user: User | null;
 };
