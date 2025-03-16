@@ -4,12 +4,12 @@ import { v4 as uuid } from 'uuid'
 import { Dispatch, SetStateAction } from "react";
 import { StoryService } from "@/services/StoryService";
 
-export class StoriesModifier {
+export class StoryModifiers {
     static getModifiers(
         stories: Story[],
         setStories: Dispatch<SetStateAction<Story[]>>,
         currentProjectId: string,
-    ): StoriesModifiersType {
+    ): StoryModifiersType {
         const addStory = (story: BaseStory) => {
             const newStory = { id: uuid(), ...story };
             StoryService.add(newStory)
@@ -39,7 +39,7 @@ export class StoriesModifier {
     }
 }
 
-export type StoriesModifiersType = {
+export type StoryModifiersType = {
     addStory: (story: BaseStory) => void
     getStory: (storyId: string) => Story | null
     updateStory: (storyId: string, storyPartial: Partial<Story>) => void

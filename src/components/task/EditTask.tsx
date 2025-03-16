@@ -3,23 +3,23 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { FaEdit } from "react-icons/fa";
-import { Story } from '@/models/Story';
-import StoryForm, { StoryEdited } from './StoryForm';
+import { Task } from '@/models/Task';
+import TaskForm, { TaskEdited } from './TaskForm';
 
-type StoryEditProps = {
-    story: Story;
+type TaskEditProps = {
+    task: Task;
 };
 
-function EditStory({ story }: StoryEditProps) {
+function EditTask({ task }: TaskEditProps) {
     const [show, setShow] = useState(false);
-    const { updateStory } = useProjects()
+    const { updateTask } = useProjects()
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
 
-    const onEdit = (storyEdited: StoryEdited) => {
-        updateStory(story.id, storyEdited)
+    const onEdit = (taskEdited: TaskEdited) => {
+        updateTask(task.id, taskEdited)
         setShow(false)
     }
 
@@ -31,14 +31,14 @@ function EditStory({ story }: StoryEditProps) {
 
             <Modal show={show} onHide={handleClose} className='text-dark'>
                 <Modal.Header closeButton>
-                    <Modal.Title>Edit story</Modal.Title>
+                    <Modal.Title>Edit task</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <StoryForm story={story} submitHandler={onEdit}></StoryForm>
+                    <TaskForm task={task} submitHandler={onEdit}></TaskForm>
                 </Modal.Body>
             </Modal>
         </>
     );
 }
 
-export default EditStory
+export default EditTask

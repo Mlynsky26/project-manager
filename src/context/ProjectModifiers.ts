@@ -5,13 +5,13 @@ import { ProjectService } from "@/services/ProjectService";
 import { v4 as uuid } from 'uuid'
 import { Dispatch, SetStateAction } from "react";
 
-export class ProjectsModifier {
+export class ProjectModifiers {
     static getModifiers(
         projects: Project[],
         setProjects: Dispatch<SetStateAction<Project[]>>,
         currentProjectId: string,
         setCurrentProjectId: Dispatch<SetStateAction<string>>,
-    ): ProjectsModifiersType {
+    ): ProjectModifiersType {
         const addProject = (project: BaseProject) => {
             const newProject = { id: uuid(), name: project.name, description: project.description };
             ProjectService.add(newProject)
@@ -52,7 +52,7 @@ export class ProjectsModifier {
     }
 }
 
-export type ProjectsModifiersType = {
+export type ProjectModifiersType = {
     addProject: (project: BaseProject) => void
     getProject: (projectId: string) => Project | null
     updateProject: (projectId: string, projectPartial: Partial<Project>) => void

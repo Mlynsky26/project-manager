@@ -3,26 +3,23 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { FaPlus } from "react-icons/fa";
-import StoryForm, { StoryEdited } from './StoryForm';
 import { Priority } from '@/models/Priority';
 import { State } from '@/models/State';
-import { useUser } from '@/context/UserContext';
+import TaskForm, { TaskEdited } from './TaskForm';
 
-function AddStory() {
+function AddTask() {
     const [show, setShow] = useState(false);
-    const { addStory, currentProjectId } = useProjects()
-    const { user } = useUser()
+    const { addTask} = useProjects()
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const onAdd = (story: StoryEdited) => {
-
-        addStory({
-            ...story,
-            project: currentProjectId,
+    const onAdd = (task: TaskEdited) => {
+        addTask({
+            ...task,
+            state: State.TODO,
             created_at: new Date().getTime(),
-            user: user ? user.id : ''
+
         })
         setShow(false)
     }
@@ -30,19 +27,25 @@ function AddStory() {
     return (
         <>
             <Button variant='primary' className="d-flex align-items-center gap-1" onClick={handleShow}>
-                <FaPlus /> Add story
+                <FaPlus /> Add task
             </Button>
 
             <Modal show={show} onHide={handleClose} className='text-dark'>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add story</Modal.Title>
+                    <Modal.Title>Add task</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <StoryForm story={{ name: '', description: '', priority: Priority.LOW, state: State.TODO }} submitHandler={onAdd}></StoryForm>
+                    <TaskForm task={{
+                        name: '',
+                        description: '',
+                        priority: Priority.LOW,
+                        estimated_time: 0,
+                        story: '',
+                    }} submitHandler={onAdd}></TaskForm>
                 </Modal.Body>
             </Modal>
         </>
     );
 }
 
-export default AddStory
+export default AddTask

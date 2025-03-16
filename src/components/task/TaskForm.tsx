@@ -1,41 +1,51 @@
 import { Alert } from "react-bootstrap";
 import { useState } from "react";
-import { BaseStory } from "@/models/BaseStory";
 import { useProjects } from "@/context/ProjectsContext";
-import { useUser } from "@/context/UserContext";
+import { UserRole, useUser } from "@/context/UserContext";
 import { Priority } from "@/models/Priority";
 import { State } from "@/models/State";
 
-export type StoryEdited = {
+export type TaskEdited = {
     name: string,
     description: string,
     priority: Priority
-    state: State
+    story: string
+    estimated_time: number
 }
 
-type StoryFormProps = {
-    story: StoryEdited
-    submitHandler: (story: StoryEdited) => void
+type TaskFormProps = {
+    task: TaskEdited
+    submitHandler: (task: TaskEdited) => void
 };
 
-const StoryForm = ({ story, submitHandler }: StoryFormProps) => {
-
-    const { currentProjectId } = useProjects()
-    const { user } = useUser()
-    const [name, setName] = useState(story.name)
-    const [description, setDescription] = useState(story.description)
-    const [priority, setPriority] = useState(story.priority)
-    const [state, setState] = useState(story.state)
+const TaskForm = ({ task, submitHandler }: TaskFormProps) => {
+    const { stories } = useProjects()
+    const [name, setName] = useState(task.name)
+    const [description, setDescription] = useState(task.description)
+    const [priority, setPriority] = useState(task.priority)
+    const [story, setStory] = useState(task.story)
+    const [estimatedTime, setEstimatedTime] = useState(task.estimated_time)
     const [error, setError] = useState('')
+
+    if (stories.length == 0)
+        return 'No available stories'
+
+    if (!story)
+        setStory(stories[0].id)
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        if (name && description && priority && state) {
+        if (name &&
+            description &&
+            priority &&
+            story &&
+            estimatedTime > 0) {
             submitHandler({
                 name,
                 description,
                 priority,
-                state: state,
+                story,
+                estimated_time: estimatedTime,
             })
             setError('')
         } else {
@@ -56,6 +66,11 @@ const StoryForm = ({ story, submitHandler }: StoryFormProps) => {
             </div>
 
             <div className="form-group mb-2">
+                <label htmlFor="estimated-time">Name</label>
+                <input type="number" className="form-control" id="estimated-time" placeholder="Enter estimated time" value={estimatedTime} onChange={(e) => setEstimatedTime(e.target.value as unknown as number)} />
+            </div>
+
+            <div className="form-group mb-2">
                 <label htmlFor="priority-select">
                     Priority
                 </label>
@@ -72,19 +87,20 @@ const StoryForm = ({ story, submitHandler }: StoryFormProps) => {
                     ))}
                 </select>
             </div>
+
             <div className="form-group mb-2">
-                <label htmlFor="state-select">
-                    State
+                <label htmlFor="story-select">
+                    Story
                 </label>
                 <select
-                    value={state}
-                    onChange={(e) => setState(e.target.value as State)}
-                    id="state-select"
+                    value={story}
+                    onChange={(e) => setStory(e.target.value)}
+                    id="story-select"
                     className="form-select"
                 >
-                    {Object.values(State).map((state) => (
-                        <option key={state} value={state}>
-                            {state}
+                    {stories.map((story) => (
+                        <option key={story.id} value={story.id}>
+                            {story.name}
                         </option>
                     ))}
                 </select>
@@ -94,4 +110,4 @@ const StoryForm = ({ story, submitHandler }: StoryFormProps) => {
     );
 };
 
-export default StoryForm;
+export default TaskForm;

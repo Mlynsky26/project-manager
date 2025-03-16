@@ -25,7 +25,7 @@ function StoryDetails({ story }: StoryDetailsProps) {
 
             <Modal show={show} onHide={handleClose} className='text-dark'>
                 <Modal.Header closeButton>
-                    <Modal.Title>Project info</Modal.Title>
+                    <Modal.Title>Story info</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <h4>Name: {story.name}</h4>

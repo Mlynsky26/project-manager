@@ -11,6 +11,7 @@ const navLinks = [
     { name: "Home", href: "/"},
     { name: "Projects", href: "/projects"},
     { name: "Stories", href: "/stories"},
+    { name: "Tasks", href: "/tasks"},
 ];
 
 const Header = () => {
@@ -19,7 +20,7 @@ const Header = () => {
         <header>
             <Navbar bg="dark" variant="dark" expand="lg">
                 <Container>
-                    <Navbar.Brand href="/">Projects Manager <BsPencilSquare className="text-success" /></Navbar.Brand>
+                    <Navbar.Brand href="/" className="d-flex align-items-center gap-2">ManageMe <BsPencilSquare className="text-success" /></Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
