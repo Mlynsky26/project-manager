@@ -7,9 +7,9 @@ export const users: UserRaw[] = [
         id: '1',
         firstName: 'Marek',
         lastName: 'Mostowiak',
-        username: 'mmostowiak',
+        username: 'm',
         role: UserRole.ADMIN,
-        password: bcrypt.hashSync("haslo", 10)
+        password: bcrypt.hashSync("m", 10)
     },
     {
         id: '2',

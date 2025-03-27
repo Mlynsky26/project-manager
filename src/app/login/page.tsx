@@ -1,24 +1,21 @@
 "use client";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import LoginForm from "@/components/LoginForm";
 import { useUser } from "@/context/UserContext";
 
 export default function LoginPage() {
+  const searchParams = useSearchParams()
+  const refresh = searchParams.get('refresh')
   const router = useRouter();
   const { fetchUser } = useUser();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      router.push("/");
-    }
-  }, []);
+  if(refresh) {
+    fetchUser();
+    router.push("/login");
+  }
 
   const handleLogin = (jwtToken: string) => {
-    localStorage.setItem("token", jwtToken);
     fetchUser();
-    console.log('handle login')
     router.push("/");
   };
 

@@ -1,21 +1,23 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyToken } from '@/lib/auth';
+import { verifyAccessToken } from '@/lib/auth';
 import { users } from '../../data/users';
+import { cookies } from 'next/headers';
 
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get('authorization');
-  const token = authHeader?.split(' ')[1];
+  const cookieStore = await cookies()
+  const accessToken = cookieStore.get('accessToken')?.value
 
-  if (!token) {
-    return NextResponse.json({ error: 'No token provided' }, { status: 401 });
+  if (!accessToken) {
+    return NextResponse.json({ error: 'No accessToken provided' }, { status: 401 });
   }
 
-  const userData = verifyToken(token);
+  const userData = await verifyAccessToken(accessToken);
   if (!userData) {
-    return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+    return NextResponse.json({ error: 'Invalid accessToken' }, { status: 401 });
   }
 
+  console.log(userData)
   const user = users.find((u) => u.id === userData.id);
 
   return NextResponse.json(user);

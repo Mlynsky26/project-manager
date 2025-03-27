@@ -37,17 +37,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const router = useRouter();
 
   const fetchUser = async () => {
-    const token = localStorage.getItem('token');
-    console.log('fetchUser', token)
-    if (!token) {
-      setUser(null);
-      return
-    }
-    const response = await fetch('/api/auth/me', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch('/api/auth/me', {credentials: 'include'});
 
     if (!response.ok) {
       setUser(null);
@@ -78,7 +68,6 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   const getUser = (userId: string) => users.find(u => u.id === userId) ?? null;
 
   const logout = () => {
-    localStorage.removeItem('token');
     setUser(null);
   };
 

@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { generateToken } from "@/lib/auth";
+import { generateTokens } from "@/lib/auth";
 import { User } from "@/context/UserContext";
 import { users } from "@/app/api/data/users";
+import { access } from "fs";
 
 
 export async function POST(req: NextRequest) {
@@ -14,14 +15,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid login or password" }, { status: 401 });
   }
 
-  const token = generateToken(user);
-  const response = NextResponse.json({ token });
+  const tokens = await generateTokens(user);
+  const response = NextResponse.json(tokens);
 
-  // Ustawienie tokena w ciasteczkach
-  response.cookies.set("token", token, {
+  response.cookies.set("accessToken", tokens.accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     maxAge: 3600,
+    path: "/",
+  });
+
+  response.cookies.set("refreshToken", tokens.refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 7200,
     path: "/",
   });
 
