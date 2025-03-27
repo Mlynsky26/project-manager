@@ -6,9 +6,7 @@ import { User } from '@/context/UserContext';
 
 export async function GET() {
     const safeUsers: User[] = users.map(({ password, ...user }) => {
-        console.log(user)
-        return { ...user }; // Tworzymy kopię użytkownika bez hasła, ale z rolą
+        return { ...user };
     });
-    console.log(safeUsers);
     return NextResponse.json(safeUsers);
 }

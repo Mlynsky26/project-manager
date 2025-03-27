@@ -6,7 +6,7 @@ import { Navbar, Nav, Container } from "react-bootstrap";
 import Link from "next/link";
 import { useUser } from "@/context/UserContext";
 import { FaSignInAlt, FaRegUser, FaSignOutAlt } from "react-icons/fa";
-import { useRouter } from "next/navigation"; // Dodajemy useRouter do przekierowań
+import { useRouter } from "next/navigation";
 
 const navLinks = [
     { name: "Home", href: "/" },
@@ -16,13 +16,12 @@ const navLinks = [
 ];
 
 const Header = () => {
-    const { user, logout } = useUser(); // Zakładając, że masz metodę logout w UserContext
-    const router = useRouter(); // Hook do nawigacji po wylogowaniu
-
+    const { user, logout } = useUser();
+    const router = useRouter();
     const handleLogout = async () => {
-        await fetch("/logout"); // Wysłanie żądania do wylogowania
-        logout(); // Usuwanie użytkownika z kontekstu
-        router.push("/login"); // Przekierowanie na stronę logowania
+        await fetch("/logout");
+        logout();
+        router.push("/login");
     };
 
     return (

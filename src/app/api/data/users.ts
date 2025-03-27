@@ -1,4 +1,5 @@
-import { UserRaw, UserRole } from "@/context/UserContext";
+import { UserRaw } from "@/context/UserContext";
+import { UserRole } from "@/models/UserRole";
 import bcrypt from "bcryptjs";
 
 export const users: UserRaw[] = [
@@ -8,7 +9,7 @@ export const users: UserRaw[] = [
         lastName: 'Mostowiak',
         username: 'mmostowiak',
         role: UserRole.ADMIN,
-        password: bcrypt.hashSync("password123", 10)
+        password: bcrypt.hashSync("haslo", 10)
     },
     {
         id: '2',
@@ -16,7 +17,7 @@ export const users: UserRaw[] = [
         lastName: 'Mucha',
         username: 'jmucha',
         role: UserRole.DEVELOPER,
-        password: bcrypt.hashSync("password123", 10)
+        password: bcrypt.hashSync("haslo", 10)
     },
     {
         id: '3',
@@ -24,7 +25,7 @@ export const users: UserRaw[] = [
         lastName: 'Nowak',
         username: 'jnowak',
         role: UserRole.DEVOPS,
-        password: bcrypt.hashSync("password123", 10)
+        password: bcrypt.hashSync("haslo", 10)
     },
     {
         id: '4',
@@ -32,6 +33,6 @@ export const users: UserRaw[] = [
         lastName: 'Kowalski',
         username: 'kkowalski',
         role: UserRole.DEVELOPER,
-        password: bcrypt.hashSync("password123", 10)
+        password: bcrypt.hashSync("haslo", 10)
     },
 ];

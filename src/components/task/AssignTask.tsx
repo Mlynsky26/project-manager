@@ -3,8 +3,9 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { Task } from '@/models/Task';
-import { UserRole, useUser } from '@/context/UserContext';
+import { useUser } from '@/context/UserContext';
 import { State } from '@/models/State';
+import { UserRole } from '@/models/UserRole';
 
 type TaskAssignProps = {
     task: Task;
@@ -20,7 +21,7 @@ function AssignTask({ task }: TaskAssignProps) {
     const handleShow = () => setShow(true);
 
     const userOptions = users.filter(user => user.role === UserRole.DEVELOPER || user.role === UserRole.DEVOPS)
-    if(userOptions.length > 0 && !user)
+    if (userOptions.length > 0 && !user)
         setUser(userOptions[0].id)
 
 
@@ -59,7 +60,7 @@ function AssignTask({ task }: TaskAssignProps) {
                                     >
                                         {userOptions.map((user) => (
                                             <option key={user.id} value={user.id}>
-                                                {user.firstName} { user.lastName} ({user.role})
+                                                {user.firstName} {user.lastName} ({user.role})
                                             </option>
                                         ))}
                                     </select>

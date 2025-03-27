@@ -1,5 +1,7 @@
 'use client';
 
+import { UserRole } from '@/models/UserRole';
+import { useRouter } from 'next/navigation';
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 export type UserRaw = {
@@ -15,15 +17,10 @@ export type User = Omit<UserRaw, 'password'>;
 
 export type UserOmitId = Omit<User, 'id'>;
 
-export enum UserRole {
-  ADMIN = 'ADMIN',
-  DEVOPS = 'DEVOPS',
-  DEVELOPER = 'DEVELOPER'
-}
-
 export type UserContextType = {
   user: User | null;
   users: User[];
+  fetchUser: () => Promise<void>;
   getUser: (userId: string) => User | null;
   logout: () => void;
 };
@@ -37,23 +34,34 @@ const UserContext = createContext<UserContextType>(null as unknown as UserContex
 export const UserProvider = ({ children }: UserProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [users, setUsers] = useState<User[]>([]);
+  const router = useRouter();
+
+  const fetchUser = async () => {
+    const token = localStorage.getItem('token');
+    console.log('fetchUser', token)
+    if (!token) {
+      setUser(null);
+      return
+    }
+    const response = await fetch('/api/auth/me', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      setUser(null);
+      return
+    }
+
+    const userData = await response.json();
+    if (!userData)
+      return
+
+    setUser(userData);
+  };
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const response = await fetch('/api/auth/me', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const userData = await response.json();
-        if (userData) {
-          setUser(userData);
-        }
-      }
-    };
-
     fetchUser();
   }, []);
 
@@ -73,10 +81,9 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     localStorage.removeItem('token');
     setUser(null);
   };
-  console.log(users)
 
   return (
-    <UserContext.Provider value={{ user, users, getUser, logout }}>
+    <UserContext.Provider value={{ user, users, getUser, logout, fetchUser }}>
       {children}
     </UserContext.Provider>
   );

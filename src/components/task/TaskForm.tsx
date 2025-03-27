@@ -1,9 +1,7 @@
 import { Alert } from "react-bootstrap";
 import { useState } from "react";
 import { useProjects } from "@/context/ProjectsContext";
-import { UserRole, useUser } from "@/context/UserContext";
 import { Priority } from "@/models/Priority";
-import { State } from "@/models/State";
 
 export type TaskEdited = {
     name: string,
@@ -66,7 +64,7 @@ const TaskForm = ({ task, submitHandler }: TaskFormProps) => {
             </div>
 
             <div className="form-group mb-2">
-                <label htmlFor="estimated-time">Name</label>
+                <label htmlFor="estimated-time">Estimated time</label>
                 <input type="number" className="form-control" id="estimated-time" placeholder="Enter estimated time" value={estimatedTime} onChange={(e) => setEstimatedTime(e.target.value as unknown as number)} />
             </div>
 
