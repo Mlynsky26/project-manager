@@ -1,15 +1,19 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react'
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
-export type User = {
+export type UserRaw = {
   id: string;
   firstName: string;
   lastName: string;
-  role: UserRole
+  username: string;
+  password: string;
+  role: UserRole;
 };
 
-export type UserOmitId = Omit<User, 'id'>
+export type User = Omit<UserRaw, 'password'>;
+
+export type UserOmitId = Omit<User, 'id'>;
 
 export enum UserRole {
   ADMIN = 'ADMIN',
@@ -19,36 +23,63 @@ export enum UserRole {
 
 export type UserContextType = {
   user: User | null;
-  users: User[],
-  getUser: (userId: string) => User | null 
+  users: User[];
+  getUser: (userId: string) => User | null;
+  logout: () => void;
 };
 
 type UserProviderProps = {
   children: ReactNode;
-}
-
-const usersMock: User[] = [
-  { id: 'abc', firstName: 'Marek', lastName: 'Mostowiak', role: UserRole.ADMIN },
-  { id: 'def', firstName: 'Justyna', lastName: 'Mucha', role: UserRole.DEVELOPER },
-  { id: 'ghi', firstName: 'Janusz', lastName: 'Nowak', role: UserRole.DEVOPS },
-  { id: 'jkl', firstName: 'Kamil', lastName: 'Kowalski', role: UserRole.DEVELOPER },
-]
-
-const userMock = usersMock[0]
+};
 
 const UserContext = createContext<UserContextType>(null as unknown as UserContextType);
 
 export const UserProvider = ({ children }: UserProviderProps) => {
-  // const [user, setUser] = useState<User | null >(null);
-  const [users, setUsers] = useState<User[]>(usersMock);
-  const [user, setUser] = useState<User>(userMock);
-  const getUser = (userId: string) => users.find(u => u.id === userId) ?? null
+  const [user, setUser] = useState<User | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const response = await fetch('/api/auth/me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const userData = await response.json();
+        if (userData) {
+          setUser(userData);
+        }
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await fetch('/api/users');
+      const usersData = await response.json();
+      setUsers(usersData);
+    };
+
+    fetchUsers();
+  }, []);
+
+  const getUser = (userId: string) => users.find(u => u.id === userId) ?? null;
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+  };
+  console.log(users)
 
   return (
-    <UserContext.Provider value={{ user, users, getUser }}>
+    <UserContext.Provider value={{ user, users, getUser, logout }}>
       {children}
     </UserContext.Provider>
   );
-}
+};
 
-export const useUser = () => useContext(UserContext)
+export const useUser = () => useContext(UserContext);

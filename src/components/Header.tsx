@@ -5,17 +5,26 @@ import { BsPencilSquare } from "react-icons/bs";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import Link from "next/link";
 import { useUser } from "@/context/UserContext";
-import { FaSignInAlt, FaRegUser } from "react-icons/fa";
+import { FaSignInAlt, FaRegUser, FaSignOutAlt } from "react-icons/fa";
+import { useRouter } from "next/navigation"; // Dodajemy useRouter do przekierowań
 
 const navLinks = [
-    { name: "Home", href: "/"},
-    { name: "Projects", href: "/projects"},
-    { name: "Stories", href: "/stories"},
-    { name: "Tasks", href: "/tasks"},
+    { name: "Home", href: "/" },
+    { name: "Projects", href: "/projects" },
+    { name: "Stories", href: "/stories" },
+    { name: "Tasks", href: "/tasks" },
 ];
 
 const Header = () => {
-    const { user } = useUser()
+    const { user, logout } = useUser(); // Zakładając, że masz metodę logout w UserContext
+    const router = useRouter(); // Hook do nawigacji po wylogowaniu
+
+    const handleLogout = async () => {
+        await fetch("/logout"); // Wysłanie żądania do wylogowania
+        logout(); // Usuwanie użytkownika z kontekstu
+        router.push("/login"); // Przekierowanie na stronę logowania
+    };
+
     return (
         <header>
             <Navbar bg="dark" variant="dark" expand="lg">
@@ -31,7 +40,23 @@ const Header = () => {
                             ))}
                         </Nav>
                     </Navbar.Collapse>
-                    {user ? <div className="d-flex align-items-center ms-2"><FaRegUser className="me-1"/>{`${user.firstName} ${user.lastName}`}</div> : <Link href="/" className="btn btn-outline-primary ms-2">Log in <FaSignInAlt /></Link>}
+                    {user ? (
+                        <div className="d-flex align-items-center ms-2">
+                            <FaRegUser className="me-1" />
+                            {`${user.firstName} ${user.lastName}`}
+                            <button
+                                className="btn btn-outline-danger ms-2"
+                                onClick={handleLogout}
+                            >
+                                <FaSignOutAlt className="me-1" />
+                                Logout
+                            </button>
+                        </div>
+                    ) : (
+                        <Link href="/login" className="btn btn-outline-primary ms-2">
+                            Log in <FaSignInAlt />
+                        </Link>
+                    )}
                 </Container>
             </Navbar>
         </header>
