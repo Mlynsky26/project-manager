@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  DEVOPS
+  DEVELOPER
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum UserStoryPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum UserStoryStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+model User {
+  id               String    @id @default(cuid())
+  name             String
+  email            String
+  emailVerified    Boolean   @default(false)
+  image            String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  twoFactorEnabled Boolean   @default(false)
+  Session          Session[]
+  Account          Account[]
+  tasks            Task[]
+  userStories      UserStory[]
+  activeProject    Project?  @relation(fields: [activeProjectId], references: [id])
+  activeProjectId  String?
+  role             UserRole
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("session")
+}
+
+model Account {
+  id           String    @id @default(cuid())
+  accountId    String
+  providerId   String
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken  String?
+  refreshToken String?
+  idToken      String?
+  expiresAt    DateTime?
+  password     String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  @@map("verification")
+}
+
+model Project {
+  id          String      @id @default(cuid())
+  name        String
+  description String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime?
+  userStories UserStory[]
+  users       User[]
+}
+
+model Task {
+  id            String      @id @default(cuid())
+  name          String
+  description   String
+  priority      TaskPriority
+  status        TaskStatus
+  estimatedTime Int
+  startedAt     DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime?
+  assignedUser  User?        @relation(fields: [assignedUserId], references: [id])
+  assignedUserId  String?
+  userStory     UserStory?   @relation(fields: [userStoryId], references: [id])
+  userStoryId   String?
+}
+
+model UserStory {
+  id          String           @id @default(cuid())
+  name        String
+  description String
+  priority    UserStoryPriority
+  status      UserStoryStatus
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime?
+  project     Project          @relation(fields: [projectId], references: [id])
+  projectId   String
+  owner       User             @relation(fields: [ownerId], references: [id])
+  ownerId     String
+  tasks       Task[]
+}

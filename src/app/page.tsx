@@ -1,13 +1,13 @@
-import Link from "next/link";
+"use client";
+import PageBreadcrumb from "@/components/shared/layout/pageBreadcrumb";
 
-const HomePage = () => {
+export default function Home() {
   return (
-    <div className="container text-center mt-5">
-      <h1>Welcome to Your Project Manager</h1>
-      <p className="lead">Easily track, organize, and manage your projects efficiently.</p>
-      <Link href="/projects" className="btn btn-primary">Get Started</Link>
+    <div>
+      <PageBreadcrumb items={[]} />
+      <h1 className="text-3xl font-semibold text-center mt-5">
+        Zarządzaj swoimi projektami z ManageMe
+      </h1>
     </div>
   );
-};
-
-export default HomePage;
+}
