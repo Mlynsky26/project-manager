@@ -10,7 +10,6 @@ const PROTECTED_PAGES_ROUTES = [
     routes.userStories.create,
     routes.userStories.tasks.index,
     routes.userStories.tasks.create,
-    routes.userStories.tasks.double,
 ];
 
 const PROTECTED_API_ROUTES = [
