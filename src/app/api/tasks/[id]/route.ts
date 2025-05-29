@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getTask, updateTask, deleteTask } from "@/prisma/tasks";
 import ID from "@/types/id";
+import { writePermissionCheck } from "@/lib/auth/writePermissionCheck";
 
 export async function GET({ params }: { params: { id: ID } }) {
   try {
@@ -22,6 +23,8 @@ export async function PUT(
   request: Request,
   { params }: { params: { id: ID } }
 ) {
+  const error = await writePermissionCheck()
+  if (error) return error
   try {
     const { id } = await params;
     const data = await request.json();
@@ -43,6 +46,8 @@ export async function DELETE(
   request: Request,
   { params }: { params: { id: ID } }
 ) {
+  const error = await writePermissionCheck()
+  if (error) return error
   try {
     const { id } = await params;
     await deleteTask(id);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useUsersStoretoriesStore } from "@/providers/userStoriesProvider";
+import { useUsersStoriesStore } from "@/providers/userStoriesProvider";
 import { z } from "zod";
 import { formSchema, UserStoryForm } from "./userStoryForm";
 import { UserStoryPriority, UserStoryStatus } from "@prisma/client";
@@ -8,6 +8,7 @@ import ID from "@/types/id";
 import { toast } from "sonner";
 import ActionButton from "@/components/shared/elements/actionButton";
 import { LuNotebookPen } from "react-icons/lu";
+import { useSession } from "@/lib/auth/authClient";
 
 interface CreateUserStoryFormProps {
   ownerId: ID;
@@ -18,7 +19,8 @@ export default function CreateUserStoryForm({
   ownerId,
   projectId,
 }: CreateUserStoryFormProps) {
-  const addUserStory = useUsersStoretoriesStore((state) => state.addUserStory);
+  const addUserStory = useUsersStoriesStore((state) => state.addUserStory);
+  const session = useSession();
 
   const handleCreate = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -35,6 +37,10 @@ export default function CreateUserStoryForm({
       toast.error("Nie udało się utworzyć historyjki");
     }
   };
+
+  if(session?.data?.user?.role === "GUEST") {
+    return <></>
+  }
 
   return (
     <UserStoryForm

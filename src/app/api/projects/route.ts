@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getProjects, createProject } from "@/prisma/projects";
 import { searchParamsToSpecification } from "@/lib/prisma/specification";
 import Project from "@/types/project";
+import { writePermissionCheck } from "@/lib/auth/writePermissionCheck";
 
 export async function GET(request: Request) {
   try {
@@ -19,6 +20,10 @@ export async function GET(request: Request) {
 }
 
 export async function POST(req: Request) {
+ 
+  const error = await writePermissionCheck()
+  if(error) return error
+
   try {
     const data = await req.json();
     const now = new Date();

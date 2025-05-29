@@ -45,7 +45,6 @@ export default function Profile() {
   const onSubmit = async (data: FormData) => {
     try {
       const updatedUser = {
-        ...user!,
         name: data.name,
         image: data.image || null,
       };
@@ -102,6 +101,8 @@ export default function Profile() {
                 </FormItem>
               )}
             />
+
+            <p>Rola: {user?.role}</p>
 
             <Button type="submit">Zapisz</Button>
           </form>

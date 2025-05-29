@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { formSchema, UserStoryForm } from "./userStoryForm";
-import { useUsersStoretoriesStore } from "@/providers/userStoriesProvider";
+import { useUsersStoriesStore } from "@/providers/userStoriesProvider";
 import UserStory from "@/types/userStory";
 import { toast } from "sonner";
 import UpdateFormProps from "@/types/props/updateFormProps";
@@ -14,7 +14,7 @@ type UpdateUserStoryFormProps = UpdateFormProps<UserStory>;
 export default function UpdateUserStoryForm({
   item: userStory,
 }: UpdateUserStoryFormProps) {
-  const updateUserStory = useUsersStoretoriesStore(
+  const updateUserStory = useUsersStoriesStore(
     (state) => state.updateUserStory
   );
 

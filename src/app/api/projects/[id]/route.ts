@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getProject, updateProject, deleteProject } from "@/prisma/projects";
 import ID from "@/types/id";
+import { writePermissionCheck } from "@/lib/auth/writePermissionCheck";
 
 export async function GET(req: Request, { params }: { params: { id: ID } }) {
   try {
@@ -19,6 +20,8 @@ export async function GET(req: Request, { params }: { params: { id: ID } }) {
 }
 
 export async function PUT(req: Request, { params }: { params: { id: ID } }) {
+  const error = await writePermissionCheck()
+  if (error) return error
   try {
     const { id } = await params;
     const data = await req.json();
@@ -37,6 +40,8 @@ export async function PUT(req: Request, { params }: { params: { id: ID } }) {
 }
 
 export async function DELETE(req: Request, { params }: { params: { id: ID } }) {
+  const error = await writePermissionCheck()
+  if (error) return error
   try {
     const { id } = await params;
     await deleteProject(id);

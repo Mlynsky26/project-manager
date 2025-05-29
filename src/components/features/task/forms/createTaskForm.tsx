@@ -6,6 +6,7 @@ import { formSchema, TaskForm } from "./taskForm";
 import { TaskPriority, TaskStatus } from "@prisma/client";
 import ID from "@/types/id";
 import { toast } from "sonner";
+import { useSession } from "@/lib/auth/authClient";
 
 interface CreateTaskFormProps {
   userStoryId: ID;
@@ -17,6 +18,7 @@ export default function CreateTaskForm({
   trigger,
 }: CreateTaskFormProps) {
   const addTask = useTasksStore((state) => state.addTask);
+  const session = useSession();
 
   const handleCreate = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -28,11 +30,15 @@ export default function CreateTaskForm({
         estimatedTime: values.estimatedTime,
         userStoryId,
       });
-      toast.success(t("task.toast.create.success"));
+      toast.success("Zadanie zostało utworzone");
     } catch {
-      toast.error(t("task.toast.create.failed"));
+      toast.error("Nie udało się utworzyć zadania");
     }
   };
+
+  if (session?.data?.user?.role === "GUEST") {
+    return <></>
+  }
 
   return (
     <TaskForm

@@ -4,15 +4,15 @@ import ID from "./id";
 
 export default interface User extends Base {
   email: string;
-  displayName: string | null;
+  name: string | null;
   role: UserRole;
-  photoURL: string | null;
+  image: string | null;
   activeProjectId: ID | null;
 }
 
 export const mapUsersToSelect = (users: User[]) => {
   return users.map((user) => ({
-    label: user.displayName || user.email || user.id,
+    label: user.name || user.email || user.id,
     value: user.id,
   }));
 };

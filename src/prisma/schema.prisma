@@ -1,3 +1,4 @@
+//npx prisma db push --schema=./src/prisma/schema.prisma  
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,6 +12,7 @@ enum UserRole {
   ADMIN
   DEVOPS
   DEVELOPER
+  GUEST
 }
 
 enum TaskPriority {

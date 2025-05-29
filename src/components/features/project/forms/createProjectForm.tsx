@@ -6,9 +6,11 @@ import { formSchema, ProjectForm } from "./projectForm";
 import { toast } from "sonner";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 import ActionButton from "@/components/shared/elements/actionButton";
+import { useSession } from "@/lib/auth/authClient";
 
 export default function CreateProjectForm() {
   const addProject = useProjectsStore((state) => state.addProject);
+  const session = useSession();
   const handleCreate = async (values: z.infer<typeof formSchema>) => {
     try {
       await addProject({
@@ -20,6 +22,10 @@ export default function CreateProjectForm() {
       toast.error("Nie udało się utworzyć projektu");
     }
   };
+  
+  if(session?.data?.user?.role === "GUEST") {
+    return <></>
+  }
 
   return (
     <ProjectForm

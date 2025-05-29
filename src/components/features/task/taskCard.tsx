@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { formatDate } from "@/lib/utils/dateFormat";
 import BaseCard from "../../shared/base/baseCard";
 import ActionButton from "@/components/shared/elements/actionButton";
+import { useSession } from "@/lib/auth/authClient";
 
 export default function TaskCard(task: Task) {
   const deleteTask = useTasksStore((state) => state.deleteTask);
@@ -18,6 +19,7 @@ export default function TaskCard(task: Task) {
   const assignedUser = task.assignedUserId
     ? getUserById(task.assignedUserId)
     : null;
+  const session = useSession();
 
   const handleDelete = async () => {
     try {
@@ -41,7 +43,7 @@ export default function TaskCard(task: Task) {
     }
   };
 
-  const additionalActions = (
+  const additionalActions = session?.data?.user?.role !== "GUEST"  ? (
     <>
       {task.status === TaskStatus.PENDING && <AssignUserForm task={task} />}
       {task.status === TaskStatus.IN_PROGRESS && (
@@ -61,7 +63,7 @@ export default function TaskCard(task: Task) {
           />
         )}
     </>
-  );
+  ) : null;
 
   const additionalProperties = (
     <>
@@ -73,10 +75,10 @@ export default function TaskCard(task: Task) {
       </p>
       <p>
         <strong>Przypisany użytkownik:</strong>{" "}
-        {assignedUser ? assignedUser.displayName : "N/A"}
+        {assignedUser ? assignedUser.name : "N/A"}
       </p>
       <p>
-        <strong>Cas rozpoczęcia:</strong>{" "}
+        <strong>Czas rozpoczęcia:</strong>{" "}
         {formatDate(task.startedAt)}
       </p>
       <p>

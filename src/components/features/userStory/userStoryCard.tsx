@@ -1,4 +1,4 @@
-import { useUsersStoretoriesStore } from "@/providers/userStoriesProvider";
+import { useUsersStoriesStore } from "@/providers/userStoriesProvider";
 import UpdateUserStoryForm from "./forms/updateUserStoryForm";
 import UserStory from "@/types/userStory";
 import { toast } from "sonner";
@@ -9,7 +9,7 @@ import ActionButton from "@/components/shared/elements/actionButton";
 import { LuClipboardList } from "react-icons/lu";
 
 export default function UserStoryCard(userStory: UserStory) {
-  const deleteUserStory = useUsersStoretoriesStore(
+  const deleteUserStory = useUsersStoriesStore(
     (state) => state.deleteUserStory
   );
   const owner = useUsersStore((state) => state.getUserById(userStory.ownerId));

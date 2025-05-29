@@ -8,7 +8,7 @@ import { useParams } from "next/navigation";
 import Task from "@/types/task";
 import ID from "@/types/id";
 import UserStory from "@/types/userStory";
-import { useUsersStoretoriesStore } from "@/providers/userStoriesProvider";
+import { useUsersStoriesStore } from "@/providers/userStoriesProvider";
 import ActionButton from "@/components/shared/elements/actionButton";
 import PageBreadcrumb from "@/components/shared/layout/pageBreadcrumb";
 import { useProjectsStore } from "@/providers/projectsProvider";
@@ -18,7 +18,7 @@ import Spinner from "@/components/shared/elements/spinner";
 
 export default function Tasks() {
   const { id } = useParams();
-  const userStory: UserStory | null = useUsersStoretoriesStore((state) =>
+  const userStory: UserStory | null = useUsersStoriesStore((state) =>
     state.getUserStoryById(id as ID)
   );
   const tasks: Task[] | null = useTasksStore((state) => state.tasks);

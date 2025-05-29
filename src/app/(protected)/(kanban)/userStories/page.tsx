@@ -2,7 +2,7 @@
 import CreateUserStoryForm from "@/components/features/userStory/forms/createUserStoryForm";
 import UserStoriesGrid from "@/components/features/userStory/userStoriesGrid";
 import { useProjectsStore } from "@/providers/projectsProvider";
-import { useUsersStoretoriesStore } from "@/providers/userStoriesProvider";
+import { useUsersStoriesStore } from "@/providers/userStoriesProvider";
 import UserStory from "@/types/userStory";
 import PageBreadcrumb from "@/components/shared/layout/pageBreadcrumb";
 import { routes } from "@/lib/routes/routes";
@@ -13,7 +13,7 @@ export default function UserStories() {
 
   const { data, isPending } = useSession();
   const user = data?.user;
-  const userStories: UserStory[] = useUsersStoretoriesStore(
+  const userStories: UserStory[] = useUsersStoriesStore(
     (state) => state.userStories
   );
   const activeProject = useProjectsStore((state) =>

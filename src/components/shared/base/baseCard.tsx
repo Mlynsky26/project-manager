@@ -12,6 +12,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { LuTrash2 } from "react-icons/lu";
+import { useSession } from "@/lib/auth/authClient";
 
 interface BaseCardProps<T extends KanbanBase> {
   item: T;
@@ -28,6 +29,8 @@ export default function BaseCard<T extends KanbanBase>({
   additionalProperties,
   UpdateFormComponent,
 }: BaseCardProps<T>) {
+
+  const session = useSession();
   return (
     <Card>
       <CardHeader>
@@ -35,21 +38,25 @@ export default function BaseCard<T extends KanbanBase>({
           <CardTitle className="break-all">{item.name}</CardTitle>
           <div className="flex flex-wrap gap-2 order-1 sm:order-2">
             {additionalActions}
-            <UpdateFormComponent item={item} />
-            <ConfirmModal
-              header="Usunięcie elementu"
-              message="Na pewno chcesz usunąć ten element?"
-              onConfirm={onDelete}
-              trigger={
-                <ActionButton
-                  variant="destructive"
-                  size="icon"
-                  tooltip="Usuń element"
-                >
-                  <LuTrash2 />
-                </ActionButton>
+            { session?.data?.user?.role !== "GUEST"  &&
+                <>
+                  <UpdateFormComponent item={item} />
+                  <ConfirmModal
+                    header="Usunięcie elementu"
+                    message="Na pewno chcesz usunąć ten element?"
+                    onConfirm={onDelete}
+                    trigger={
+                      <ActionButton
+                        variant="destructive"
+                        size="icon"
+                        tooltip="Usuń element"
+                      >
+                        <LuTrash2 />
+                      </ActionButton>
+                    }
+                  />
+                </>
               }
-            />
           </div>
         </div>
       </CardHeader>
